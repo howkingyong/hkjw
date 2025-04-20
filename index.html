@@ -84,9 +84,13 @@
             }
         }
         #anniversary {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 18px;
             color: #ff3385;
+        }
+        #countdown {
+            font-size: 16px;
+            color: #cc2277;
         }
         #gf-photo {
             max-width: 300px;
@@ -97,7 +101,7 @@
     </style>
 </head>
 <body>
-    <audio autoplay loop hidden>
+    <audio autoplay loop controls style="display:none">
         <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -105,6 +109,8 @@
     <img id="gf-photo" src="a101b59c-620b-4eea-a7de-9b0310c47664.png" alt="Beautiful JW">
 
     <div id="anniversary"></div>
+    <div id="countdown"></div>
+
     <h1 id="main-question">你是黄佳汶吗？</h1>
     <div class="button-container" id="main-buttons">
         <button onclick="yesClicked()">是</button>
@@ -132,17 +138,33 @@
         const today = new Date(now.getTime() + totalOffset * 60 * 1000);
 
         const anniversaryDate = new Date("2024-11-26T00:00:00+08:00");
+        const oneYearAnniversary = new Date("2025-11-26T00:00:00+08:00");
+
         const timeDiff = anniversaryDate.getTime() - today.getTime();
         const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
         const firstDay = new Date("2024-11-26T00:00:00+08:00");
-        const diffFromFirst = Math.floor((today - firstDay) / (1000 * 3600 * 24));
+        const diffFromFirst = Math.floor((today - firstDay) / (1000 * 3600 * 24)) + 1;
 
         const anniversaryText = timeDiff > 0 
             ? `离我们的6个月纪念日还有 ${daysLeft} 天 ❤️` 
             : `我们已经在一起 ${diffFromFirst} 天啦 💕`;
 
         document.getElementById("anniversary").textContent = anniversaryText;
+
+        // Countdown to 1st anniversary
+        function updateCountdown() {
+            const now = new Date(new Date().getTime() + totalOffset * 60 * 1000);
+            const diff = oneYearAnniversary - now;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / (1000 * 60)) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            document.getElementById("countdown").textContent = `距离我们的一周年还有：${d}天 ${h}小时 ${m}分钟 ${s}秒 💖`;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
 
         function yesClicked() {
             document.getElementById("main-question").style.display = "none";
