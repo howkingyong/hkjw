@@ -13,6 +13,8 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #ffe6f0;
+            overflow: hidden;
+            text-align: center;
         }
         h1 {
             margin-bottom: 40px;
@@ -30,9 +32,11 @@
             border-radius: 10px;
             background-color: #ff66a3;
             color: white;
+            transition: transform 0.2s ease;
         }
         button:hover {
             background-color: #ff3385;
+            transform: scale(1.1);
         }
         #love-question {
             display: none;
@@ -45,9 +49,62 @@
             align-items: center;
             margin-top: 30px;
         }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            transform: rotate(45deg);
+            animation: float 4s ease-in infinite;
+        }
+        .heart::before, .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+        .heart::after {
+            left: -10px;
+            top: 0;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+        #anniversary {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #ff3385;
+        }
+        #gf-photo {
+            max-width: 300px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
+    <audio autoplay loop hidden>
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <img id="gf-photo" src="a101b59c-620b-4eea-a7de-9b0310c47664.png" alt="Beautiful JW">
+
+    <div id="anniversary"></div>
     <h1 id="main-question">你是黄佳汶吗？</h1>
     <div class="button-container" id="main-buttons">
         <button onclick="yesClicked()">是</button>
@@ -67,6 +124,26 @@
     </div>
 
     <script>
+        // Malaysia time adjustment
+        const now = new Date();
+        const malaysiaOffset = 8 * 60; // +0800 in minutes
+        const localOffset = now.getTimezoneOffset();
+        const totalOffset = malaysiaOffset + localOffset;
+        const today = new Date(now.getTime() + totalOffset * 60 * 1000);
+
+        const anniversaryDate = new Date("2024-11-26T00:00:00+08:00");
+        const timeDiff = anniversaryDate.getTime() - today.getTime();
+        const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+        const firstDay = new Date("2024-11-26T00:00:00+08:00");
+        const diffFromFirst = Math.floor((today - firstDay) / (1000 * 3600 * 24));
+
+        const anniversaryText = timeDiff > 0 
+            ? `离我们的6个月纪念日还有 ${daysLeft} 天 ❤️` 
+            : `我们已经在一起 ${diffFromFirst} 天啦 💕`;
+
+        document.getElementById("anniversary").textContent = anniversaryText;
+
         function yesClicked() {
             document.getElementById("main-question").style.display = "none";
             document.getElementById("main-buttons").style.display = "none";
@@ -81,6 +158,7 @@
         function loveYes() {
             const love = `6个月快乐 ❤️❤️❤️\n\n       ******       ******\n     **********   **********\n    ************* *************\n    ***************************\n     *************************\n      ***********************\n       *********************\n        *******************\n         *****************\n          ***************\n           *************\n            ***********\n             *********\n              *******\n               *****\n                ***\n                 *`;
             alert(love);
+            createHearts();
             showRestart();
         }
 
@@ -95,6 +173,17 @@
 
         function restart() {
             location.reload();
+        }
+
+        function createHearts() {
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement("div");
+                heart.className = "heart";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = (2 + Math.random() * 2) + "s";
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 4000);
+            }
         }
     </script>
 </body>
